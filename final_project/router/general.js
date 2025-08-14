@@ -23,17 +23,8 @@ public_users.post("/register", (req,res) => {
 
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
-    const { username, password } = req.body;
-
-    if (!username || !password) {
-        return res.status(400).json({ message: "Username and password are required"});
-    }
-    if (users.find( user => user.username === username)) {
-        return res.status(409).json({ message: "User already exist"});
-    }
-
-    users.push({ username, password });
-  return res.status(200).json({message: "Successful registration"});
+    const formattedBooks = JSON.stringify(books, null, 4);
+    res.send(formattedBooks);
 });
 
 // Get book details based on ISBN
@@ -54,7 +45,7 @@ public_users.get('/author/:author',function (req, res) {
     let booksByAuthor = [];
 
     for (let key in books) {
-        if (books[key].author.toLowerCase() === author.toLowerCase) {
+        if (books[key].author.toLowerCase() === author.toLowerCase()) {
             booksByAuthor.push(books[key]);
         }
 
