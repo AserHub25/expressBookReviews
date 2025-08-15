@@ -55,11 +55,11 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
     const { review } = req.body;
     const isbn = req.params.isbn;
 
-    if (!req.session.authorization || !req.session.authorization.username) {
+    if (!req.user || !req.user.username) {
         return res.status(401).json({ message: " You must be logged in to post a review"});
     }
 
-    const username = req.session.authorization.username;
+    const username = req.user.username;
 
     if (!review) {
         return res.status(400).json({ message: "Review content is required"});
@@ -81,6 +81,27 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
         reviews: books[isbn].reviews
     });
 });
+
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+    const isbn = req.params.isbn;
+
+    if (!req.user || !req.user.username) {
+        return res.status(401).json({
+            message: "You must be logged in to delete a review"
+        });
+
+    }
+    const username = req.user.username;
+
+    if (!books[isbn]) {
+        return res.status(404).json({
+            message: ""
+        });
+    }
+
+}
+
+);
 
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
